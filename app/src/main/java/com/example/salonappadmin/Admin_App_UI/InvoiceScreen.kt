@@ -1,0 +1,201 @@
+package com.example.salonappadmin.Admin_App_UI
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import com.example.salonappadmin.R
+import com.example.salonappadmin.viewModel.InvoiceViewModel
+import com.example.salonappadmin.viewModel.UserViewModel_Admin
+
+@Composable
+fun InvoiceScreen(navController: NavHostController, customerId: String, invoiceId: String) {
+    val invoiceViewModel: InvoiceViewModel = viewModel()
+    val userViewModel: UserViewModel_Admin = viewModel()
+    val invoiceList = invoiceViewModel.invoiceList.collectAsState().value
+    val usersList = userViewModel.usersList.collectAsState().value
+
+    // Find the user by userId
+    val selectedUser = usersList.find { it.id == customerId }
+
+    // Find the Invoice
+    val selectedInvoice = invoiceList.find { it.id == invoiceId }
+
+    // Safely construct customer details with fallback values
+    val customerName = "${selectedUser?.firstName ?: ""} ${selectedUser?.lastName ?: ""}".trim()
+    val contactNumber = selectedUser?.contact ?: "N/A"
+    val email = selectedUser?.email ?: "N/A"
+    val registrationDate = selectedUser?.timestamp ?: "N/A"
+    val invoiceDate = selectedInvoice?.postingDate ?: "N/A"
+    val services = selectedInvoice?.services ?: emptyList()
+    val grandTotal = selectedInvoice?.totalCost ?: "N/A"
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color(0xFFF5F5F5))
+            .padding(0.dp, 105.dp),
+
+        ) {
+        // Header
+        HeaderSection()
+
+        Spacer(modifier = Modifier.height(20.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFFF5F5F5))
+               // .border(1.dp, Color.Black) // Adds a 1dp black border
+                .padding(16.dp, 0.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFFF5F5F5))
+                    .border(1.dp, Color.Black) // Adds a 1dp black border
+                    .padding(16.dp, 0.dp)
+            ) {
+
+
+                // Invoice ID
+                Text(
+                    text = "Invoice ${selectedInvoice?.id ?: "N/A"}",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color(0xFF333333),
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+
+
+
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Customer Details
+                Card(
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text("Customer Details", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        CustomerDetailRow(label = "Name", value = customerName)
+                        CustomerDetailRow(label = "Contact No.", value = contactNumber)
+                        CustomerDetailRow(label = "Email", value = email)
+                        CustomerDetailRow(label = "Registration Date", value = registrationDate)
+                        CustomerDetailRow(label = "Invoice Date", value = invoiceDate)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Service Details
+                Card(
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text("Service Details", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("Service", fontWeight = FontWeight.SemiBold)
+                            Text("Cost", fontWeight = FontWeight.SemiBold)
+                        }
+                        Divider(modifier = Modifier.padding(vertical = 4.dp))
+
+                        services.forEach { service ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 4.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(service.serviceName)
+                                Text(service.cost)
+                            }
+                        }
+                        Divider(modifier = Modifier.padding(vertical = 4.dp))
+
+                        // Grand Total
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("Grand Total", fontWeight = FontWeight.Bold)
+                            Text(grandTotal, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // Print Button
+                IconButton(
+                    onClick = { /* Implement Print Action */ },
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.appoinment),
+                        contentDescription = "Print Invoice",
+                        tint = Color(0xFF333333),
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun HeaderSection3() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color(0xFF512DA8))
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = "ONE CUT'S HAIR AND BEAUTY STUDIO",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+            Text(
+                text = "Sangamner",
+                fontSize = 16.sp,
+                color = Color.White
+            )
+        }
+    }
+}
+
+@Composable
+fun CustomerDetailRow(label: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(label, fontWeight = FontWeight.SemiBold)
+        Text(value)
+    }
+}

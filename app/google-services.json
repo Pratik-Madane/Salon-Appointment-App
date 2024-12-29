@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "196684176386",
+    "project_id": "salonsystem-96c0a",
+    "storage_bucket": "salonsystem-96c0a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:196684176386:android:0f5f43a8581b8ee9385b1b",
+        "android_client_info": {
+          "package_name": "com.example.salonappadmin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArSraB8Rm3kYhRs8QZyGrGPLUiMnRWyak"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:196684176386:android:cc8812d107e14b5e385b1b",
+        "android_client_info": {
+          "package_name": "com.example.salonappcustomer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArSraB8Rm3kYhRs8QZyGrGPLUiMnRWyak"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
